@@ -10,7 +10,7 @@ from datetime import datetime
 import os
 
 import sqlalchemy as sa
-from flask import Flask, request, Response
+from flask import Flask, request, Response, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import JSON
 
@@ -54,4 +54,10 @@ def respond():
     print(request.json)
     return Response(status=200)
 
-
+@app.route("/getall")
+def get_all():
+    try:
+        records=Record.query.all()
+        return  jsonify([e.serialize() for e in records])
+    except Exception as e:
+	    return(str(e))
