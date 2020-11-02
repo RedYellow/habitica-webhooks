@@ -72,3 +72,6 @@ def get_all():
         return  jsonify([e.serialize() for e in records])
     except Exception as e:
 	    return(str(e))
+    
+if __name__ == "__main__":
+    app.run(debug=True)
