@@ -14,6 +14,8 @@ from flask import Flask, request, Response, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import JSON
 
+from config import Config
+
 # from sqlalchemy import create_engine, func
 # from sqlalchemy import create_engine, inspect
 
@@ -22,11 +24,12 @@ from sqlalchemy.dialects.postgresql import JSON
 # from record import Record
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///test"
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///habitica_db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # app.config['DATABASE_URL'] = "postgresql://localhost/books_store"
 db = SQLAlchemy(app)
 
-app.config.from_object(os.environ['APP_SETTINGS'])
+app.config.from_object(Config())
 
 class Record(db.Model):
     __tablename__ = 'record'
@@ -39,15 +42,23 @@ class Record(db.Model):
         
     def __repr__(self):
         return str(self.timestamp)
+    
+    def serialize(self):
+        return {"data": self.data, "timestamp": self.timestamp}
 
 db.create_all()
 db.session.commit()
 
 db.init_app(app)
 
+@app.route("/")
+def test():
+    return "gucci gang"
+
 
 @app.route('/webhook', methods=['POST'])
 def respond():
+    print(request)
     rec = Record(data = request.json)
     db.session.add(rec)
     db.session.commit()
