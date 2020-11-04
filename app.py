@@ -16,10 +16,21 @@ from sqlalchemy.dialects.postgresql import JSON
 
 from config import Config
 
+# from sqlalchemy import create_engine, func
+# from sqlalchemy import create_engine, inspect
+
+# from sqlalchemy.ext.declarative import declarative_base
+
+# from record import Record
+
 app = Flask(__name__)
+# app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///habitica_db"
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+# app.config['DATABASE_URL'] = "postgresql://localhost/books_store"
 db = SQLAlchemy(app)
+
+app.config.from_object(Config())
 
 class Record(db.Model):
     __tablename__ = 'record'
