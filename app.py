@@ -10,9 +10,10 @@ from datetime import datetime
 import os
 
 import sqlalchemy as sa
-from flask import Flask, request, Response, jsonify
+from flask import Flask, request, Response, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import JSON
+import psycopg2
 
 from config import Config
 
@@ -54,7 +55,12 @@ db.init_app(app)
 
 @app.route("/")
 def test():
-    return "gucci gang"
+    # return "gucci gang"
+    con = psycopg2.connect(database="Angels_Attic", user="postgres", password="", host="127.0.0.1", port="5432")
+    cursor = con.cursor()
+    cursor.execute("select * from record")
+    result = cursor.fetchall()
+    return render_template('home.html', data=result)
 
 
 @app.route('/webhook', methods=['POST'])
