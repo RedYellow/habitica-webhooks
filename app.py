@@ -42,7 +42,7 @@ db.session.commit()
 db.init_app(app)
 
 @app.route("/")
-def test():
+def main():
     return "gucci gang"
 
 
@@ -59,7 +59,8 @@ def respond():
 def get_all():
     try:
         records=Record.query.all()
-        return  jsonify([e.serialize() for e in records])
+        js = jsonify([e.serialize() for e in records])
+        return Response(js, mimetype="application/json")
     except Exception as e:
 	    return(str(e))
     
