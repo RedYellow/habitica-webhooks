@@ -47,11 +47,17 @@ db.init_app(app)
 @app.route("/")
 def home():
     # return "gucci gang"
-    con = psycopg2.connect(database="record")
-    cursor = con.cursor()
-    cursor.execute("select * from record")
-    result = cursor.fetchall()
-    return render_template('home.html', data=result)
+    # con = psycopg2.connect(database="record")
+    # cursor = con.cursor()
+    # cursor.execute("select * from record")
+    # result = cursor.fetchall()
+    # return render_template('home.html', data=result)
+    
+    try:
+        records=Record.query.all()
+        return render_template("home.html", data=[e.serialize() for e in records])
+    except Exception as e:
+	    return(str(e))
 
 
 @app.route('/webhook', methods=['POST'])
