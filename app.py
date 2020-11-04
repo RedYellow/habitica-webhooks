@@ -17,18 +17,9 @@ import psycopg2
 
 from config import Config
 
-# from sqlalchemy import create_engine, func
-# from sqlalchemy import create_engine, inspect
-
-# from sqlalchemy.ext.declarative import declarative_base
-
-# from record import Record
-
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///habitica_db"
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-# app.config['DATABASE_URL'] = "postgresql://localhost/books_store"
 db = SQLAlchemy(app)
 
 app.config.from_object(Config())
@@ -54,9 +45,9 @@ db.session.commit()
 db.init_app(app)
 
 @app.route("/")
-def test():
+def home():
     # return "gucci gang"
-    con = psycopg2.connect(database="Angels_Attic", user="postgres", password="", host="127.0.0.1", port="5432")
+    con = psycopg2.connect(database="record")
     cursor = con.cursor()
     cursor.execute("select * from record")
     result = cursor.fetchall()
