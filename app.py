@@ -53,7 +53,7 @@ def home():
     # result = cursor.fetchall()
     # return render_template('home.html', data=result)
     
-    return render_template("home.html", data=["zoop", "zoop", "zooooooop"])
+    return render_template("home.html")
     try:
         records=Record.query.all()
         return render_template("home.html", data=[e.serialize() for e in records])
