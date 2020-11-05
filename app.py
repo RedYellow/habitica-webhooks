@@ -62,7 +62,7 @@ def home():
     # data = {i["timestamp"] : i["data"]["data"]["type"] for i in js}
     for i in js:
         try:
-            data[tstamp_to_str(i["timestamp"])] = i["data"]["data"]["type"]
+            data[tstamp_to_str(i["timestamp"])] = i["data"]["type"]
         except Exception as e:
             print(e)
             data[tstamp_to_str(i["timestamp"])] = i["data"]
@@ -85,7 +85,7 @@ def respond():
 def get_all():
     try:
         records=Record.query.all()
-        return  jsonify([e.serialize() for e in records])
+        return  jsonify([e.serialize_json() for e in records])
     except Exception as e:
 	    return(str(e))
     
