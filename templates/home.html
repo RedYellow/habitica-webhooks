@@ -1,11 +1,23 @@
 <!DOCTYPE html> 
 <html>     
     <body>
-        <table>
-            {% for key, value in data.items() %}
+        <style>
+            table{
+            width:100%;
+            }
+            table td{
+                white-space: nowrap;  /** added **/
+            }
+            table td:last-child{
+                width:100%;
+            }
+        </style>
+        <table border="1" cellpadding="2" cellspacing="2" style="border-collapse:collapse;">
+            {% for i, j, k in data %}
                 <tr>
-                    <th> <div>{{ key }} </div></th>
-                    <td> {{ value }} </td>
+                    <td> <b> {{ i }} </b></td>
+                    <td> {{ j }} </td>
+                    <td> {{ k }} </td>
                 </tr>
             {% endfor %}
         </table>         

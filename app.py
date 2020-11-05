@@ -58,18 +58,14 @@ def home():
         return time.strftime('%Y-%m-%d %I:%M:%S %p', time.localtime(timestamp))
     records=Record.query.all()
     js = [e.serialize_json() for e in records]
-    data = {}
-    # data = {i["timestamp"] : i["data"]["data"]["type"] for i in js}
+    data = []
     for i in js:
         try:
-            data[tstamp_to_str(i["timestamp"])] = i["data"]["type"]
+            data.append([i["timestamp"], tstamp_to_str(i["timestamp"]), i["data"]["type"]])
         except Exception as e:
             print(e)
-            data[tstamp_to_str(i["timestamp"])] = i["data"]
+            data.append([i["timestamp"], tstamp_to_str(i["timestamp"]), i["data"]])
     return render_template("home.html", data=data)
-    # except Exception as e:
-    #     print("big exe")
-    #     return(str(e))
 
 
 @app.route('/webhook', methods=['POST'])
