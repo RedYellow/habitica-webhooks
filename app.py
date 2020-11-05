@@ -33,7 +33,7 @@ class Record(db.Model):
     timestamp = db.Column(name = "timestamp", type_ = sa.Float(), primary_key = True, unique = True)
     
     def __init__(self, data):
-        self.data = data
+        self.data = json.loads(data)
         self.timestamp = datetime.now().timestamp()
         
     def __repr__(self):
@@ -63,7 +63,8 @@ def home():
     for i in js:
         try:
             data[tstamp_to_str(i["timestamp"])] = i["data"]["data"]["type"]
-        except:
+        except Exception as e:
+            print(e)
             data[tstamp_to_str(i["timestamp"])] = i["data"]
     return render_template("home.html", data=data)
     # except Exception as e:
