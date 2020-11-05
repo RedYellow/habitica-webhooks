@@ -61,10 +61,10 @@ def home():
     data = []
     for i in js:
         try:
-            data.append([i["timestamp"], tstamp_to_str(i["timestamp"]), i["data"]["type"]])
+            data.append([i["timestamp"], tstamp_to_str(i["timestamp"]), i["data"]["data"]["type"], i["data"]["data"]["task"]["text"]])
         except Exception as e:
             print(e)
-            data.append([i["timestamp"], tstamp_to_str(i["timestamp"]), i["data"]])
+            data.append([i["timestamp"], tstamp_to_str(i["timestamp"]), i["data"], i["data"]])
     return render_template("home.html", data=data)
 
 
