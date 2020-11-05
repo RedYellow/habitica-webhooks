@@ -45,7 +45,7 @@ class Record(db.Model):
     
     def serialize_json(self):
         # returns a legit json string, to be loaded to dictionary with loads()
-        return json.dumps({"data": self.data, "timestamp": self.timestamp})
+        return {"data": self.data, "timestamp": self.timestamp}
 
 db.create_all()
 db.session.commit()
@@ -57,7 +57,7 @@ def home():
     def tstamp_to_str(timestamp):
         return time.strftime('%Y-%m-%d %I:%M:%S %p', time.localtime(timestamp))
     records=Record.query.all()
-    js = [json.loads(e.serialize_json()) for e in records]
+    js = [e.serialize_json() for e in records]
     data = {}
     # data = {i["timestamp"] : i["data"]["data"]["type"] for i in js}
     for i in js:
