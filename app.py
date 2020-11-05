@@ -6,6 +6,7 @@ Created on Thu Oct 22 17:52:45 2020
 @author: Nic
 """
 
+import time
 from datetime import datetime
 import os
 
@@ -13,9 +14,11 @@ import sqlalchemy as sa
 from flask import Flask, request, Response, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import JSON
-import psycopg2
+# import psycopg2
 
-from config import Config
+import json
+
+from config import Config #TODO: do I need this?
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
@@ -37,7 +40,12 @@ class Record(db.Model):
         return str(self.timestamp)
     
     def serialize(self):
-        return {"data": self.data, "timestamp": self.timestamp}
+        # returns a dict of jsons
+        return {"data": json.dumps(self.data), "timestamp": self.timestamp}
+    
+    def serialize_json(self):
+        # returns a legit json string, to be loaded to dictionary with loads()
+        return json.dumps({"data": json.dumps(self.data), "timestamp": self.timestamp})
 
 db.create_all()
 db.session.commit()
@@ -46,17 +54,13 @@ db.init_app(app)
 
 @app.route("/")
 def home():
-    # return "gucci gang"
-    # con = psycopg2.connect(database="record")
-    # cursor = con.cursor()
-    # cursor.execute("select * from record")
-    # result = cursor.fetchall()
-    # return render_template('home.html', data=result)
-    
-    # return render_template("home.html")
+    def tstamp_to_str(timestamp):
+        return time.strftime('%Y-%m-%d %I:%M:%S %p', time.localtime(timestamp))
     try:
         records=Record.query.all()
-        return render_template("home.html", data=[e.serialize() for e in records])
+        js = [json.loads(e.serialize_json()) for e in records]
+        data = {i["timestamp"] : i["data"]["data"]["type"] for i in js}
+        return render_template("home.html", data=data)
     except Exception as e:
 	    return(str(e))
 
