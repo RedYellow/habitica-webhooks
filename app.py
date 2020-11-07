@@ -36,7 +36,7 @@ class Record(db.Model):
     timestamp = db.Column(name = "timestamp", type_ = sa.Float(), primary_key = True, unique = True)
     
     def __init__(self, data):
-        self.data = json.loads(data)
+        self.data = json.loads(data) if isinstance(data, str) else data
         self.timestamp = datetime.now().timestamp()
         
     def __repr__(self):
@@ -70,7 +70,7 @@ def home():
                 # this is for the local
                 data.append([i["timestamp"], tstamp_to_str(i["timestamp"]), i["data"]["data"]["type"], i["data"]["data"]["task"]["text"]])
             except Exception as e:
-                print(e)
+                # print(e)
                 data.append([i["timestamp"], tstamp_to_str(i["timestamp"]), i["data"], i["data"]])
     return render_template("home.html", data=data)
 
