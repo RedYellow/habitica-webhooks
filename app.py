@@ -9,6 +9,7 @@ Created on Thu Oct 22 17:52:45 2020
 import time
 from datetime import datetime
 import os
+import pytz
 
 import sqlalchemy as sa
 from flask import Flask, request, Response, jsonify, render_template
@@ -27,6 +28,8 @@ db = SQLAlchemy(app)
 
 app.config.from_object(Config())
 
+TZ = pytz.timezone('America/Los_Angeles')
+
 class Record(db.Model):
     __tablename__ = 'record'
     data = db.Column(name = "data", type_ = JSON)
@@ -40,11 +43,9 @@ class Record(db.Model):
         return str(self.timestamp)
     
     def serialize(self):
-        # returns a dict of jsons
         return {"data": json.dumps(self.data), "timestamp": self.timestamp}
     
     def serialize_json(self):
-        # returns a legit json string, to be loaded to dictionary with loads()
         return {"data": self.data, "timestamp": self.timestamp}
 
 db.create_all()
@@ -55,7 +56,8 @@ db.init_app(app)
 @app.route("/")
 def home():
     def tstamp_to_str(timestamp):
-        return time.strftime('%Y-%m-%d %I:%M:%S %p', time.localtime(timestamp))
+        dt_stamp = datetime.fromtimestamp(timestamp)
+        return dt_stamp.astimezone(TZ).strftime('%Y-%m-%d %I:%M:%S %p')
     records=Record.query.all()
     js = [e.serialize_json() for e in records]
     data = []
@@ -75,6 +77,7 @@ def home():
 
 @app.route('/webhook', methods=['POST'])
 def respond():
+    # print("zoop")
     print(request)
     rec = Record(data = request.json)
     db.session.add(rec)
