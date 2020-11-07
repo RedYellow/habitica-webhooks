@@ -28,7 +28,7 @@ db = SQLAlchemy(app)
 
 app.config.from_object(Config())
 
-TZ = pytz.timezone('America/Los_Angeles')
+TZ = pytz.timezone('America/Los_Angeles') #TODO: change this to an environment variable
 
 class Record(db.Model):
     __tablename__ = 'record'
