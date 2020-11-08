@@ -19,15 +19,11 @@ from sqlalchemy.dialects.postgresql import JSON
 
 import json
 
-# from config import Config #TODO: do I need this?
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True # for prettyprinting in /getall
 db = SQLAlchemy(app)
-
-# app.config.from_object(Config()) #TODO: remove?
 
 try:
     str_tz = os.environ["TZ"] #TODO: make this into an app.config['str_tz'] = ...
