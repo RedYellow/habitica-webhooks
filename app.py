@@ -93,8 +93,12 @@ def js_extract(js_entry):
                         tstamp_to_str(js_entry["timestamp"]), 
                         js_entry["data"]["type"], 
                         js_entry["data"]["task"]["text"]]
-            
-            elif js_entry["data"]["type"] in ["petHatched", "mountRaised", "leveledUp"]:
+            elif js_entry["data"]["type"] == "leveledUp":
+                return [js_entry["timestamp"], 
+                        tstamp_to_str(js_entry["timestamp"]), 
+                        js_entry["data"]["type"], 
+                        js_entry["data"]["finalLvl"]]
+            elif js_entry["data"]["type"] in ["petHatched", "mountRaised"]:
                 return [js_entry["timestamp"], 
                         tstamp_to_str(js_entry["timestamp"]), 
                         js_entry["data"]["type"], 
