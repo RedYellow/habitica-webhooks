@@ -21,7 +21,7 @@ import json
 from threading import Thread
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///habitica_db"#os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True # for prettyprinting in /getall
 db = SQLAlchemy(app)
