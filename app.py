@@ -6,7 +6,6 @@ Created on Thu Oct 22 17:52:45 2020
 @author: Nic
 """
 
-import time
 from datetime import datetime
 import os
 import pytz
