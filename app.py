@@ -15,10 +15,10 @@ import sqlalchemy as sa
 from flask import Flask, request, Response, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import JSON
+from threading import Thread
 # import psycopg2
 
 import json
-from threading import Thread
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
@@ -64,7 +64,6 @@ def home():
     return render_template("home.html", data=data)
 
 def add_data(data):
-    print(data)
     db.session.add(data)
     db.session.commit()
 
@@ -118,10 +117,3 @@ def js_extract(js_entry):
 
 if __name__ == "__main__":
     app.run(debug = True)
-
-
-def date_parity(date):
-    # takes a float, returns True for an "odd" day (odd # of days since epoch), otherwise False
-    date = int(date + 18000)
-    days = int(date/86400)
-    return days%2 == 1
