@@ -1,26 +1,20 @@
-<!DOCTYPE html> 
-<html>     
+<!DOCTYPE html>
+<html>
     <body>
-        <style>
-            table{
-            width:100%;
-            }
-            table td{
-                white-space: nowrap;  /** added **/
-            }
-            table td:last-child{
-                width:100%;
-            }
-        </style>
-        <table border="1" cellpadding="2" cellspacing="2" style="border-collapse:collapse;">
+        <link rel="stylesheet" href="/static/style.css">
+        <table class="styled-table" border="1" cellpadding="2" cellspacing="2" style="border-collapse:collapse;">
             {% for i, j, k, l in data %}
-                <tr>
+                {% if ((i + 18000)|int / 86400)|int %2 ==1 %}
+                    <tr style="background-color:#ffdd80">
+                {% else %}
+                   <tr>
+                {% endif %}
                     <td> <b> {{ i }} </b></td>
                     <td> {{ j }} </td>
                     <td> {{ k }} </td>
                     <td> {{ l }} </td>
                 </tr>
             {% endfor %}
-        </table>         
-    </body> 
+        </table>
+    </body>
 </html>

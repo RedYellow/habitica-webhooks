@@ -18,9 +18,10 @@ from sqlalchemy.dialects.postgresql import JSON
 # import psycopg2
 
 import json
+from threading import Thread
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql:///habitica_db"#os.environ['DATABASE_URL']
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True # for prettyprinting in /getall
 db = SQLAlchemy(app)
@@ -36,17 +37,17 @@ class Record(db.Model):
     __tablename__ = 'record'
     data = db.Column(name = "data", type_ = JSON)
     timestamp = db.Column(name = "timestamp", type_ = sa.Float(), primary_key = True, unique = True)
-    
+
     def __init__(self, data):
         self.data = json.loads(data) if isinstance(data, str) else data
         self.timestamp = datetime.now().timestamp()
-        
+
     def __repr__(self):
         return str(self.timestamp)
-    
+
     def serialize(self):
         return {"data": json.dumps(self.data), "timestamp": self.timestamp}
-    
+
     def serialize_json(self):
         return {"data": self.data, "timestamp": self.timestamp}
 
@@ -55,19 +56,24 @@ db.session.commit()
 db.init_app(app)
 
 @app.route("/")
-def home():    
+def home():
     records=Record.query.all()
     js = [e.serialize_json() for e in records]
     data = [js_extract(entry) for entry in js ]
-            
+
     return render_template("home.html", data=data)
 
+def add_data(data):
+    print(data)
+    db.session.add(data)
+    db.session.commit()
 
 @app.route('/webhook', methods=['POST'])
 def respond():
     rec = Record(data = request.json)
-    db.session.add(rec)
-    db.session.commit()
+
+    t = Thread(target=add_data, args=(rec, ))
+    t.start()
     # print(request.json)
     return Response(status=200)
 
@@ -78,37 +84,44 @@ def get_all():
         return  jsonify([e.serialize_json() for e in records])
     except Exception as e:
 	    return(str(e))
-    
+
 def tstamp_to_str(timestamp):
         dt_stamp = datetime.fromtimestamp(timestamp)
         return dt_stamp.astimezone(TZ).strftime('%Y-%m-%d %I:%M:%S %p')
-    
+
 def js_extract(js_entry):
         try:
             if "timestamp" in js_entry["data"].keys():
                 js_entry = js_entry["data"]
-                
+
             if js_entry["data"]["type"] in ["created", "updated", "deleted", "scored", "checklistScored"]:
-                return [js_entry["timestamp"], 
-                        tstamp_to_str(js_entry["timestamp"]), 
-                        js_entry["data"]["type"], 
+                return [js_entry["timestamp"],
+                        tstamp_to_str(js_entry["timestamp"]),
+                        js_entry["data"]["type"],
                         js_entry["data"]["task"]["text"]]
             elif js_entry["data"]["type"] == "leveledUp":
-                return [js_entry["timestamp"], 
-                        tstamp_to_str(js_entry["timestamp"]), 
-                        js_entry["data"]["type"], 
+                return [js_entry["timestamp"],
+                        tstamp_to_str(js_entry["timestamp"]),
+                        js_entry["data"]["type"],
                         js_entry["data"]["finalLvl"]]
             elif js_entry["data"]["type"] in ["petHatched", "mountRaised"]:
-                return [js_entry["timestamp"], 
-                        tstamp_to_str(js_entry["timestamp"]), 
-                        js_entry["data"]["type"], 
+                return [js_entry["timestamp"],
+                        tstamp_to_str(js_entry["timestamp"]),
+                        js_entry["data"]["type"],
                         js_entry["data"]["message"]]
         except Exception as e:
             print(e)
-            return [js_entry["timestamp"], 
-                        tstamp_to_str(js_entry["timestamp"]), 
+            return [js_entry["timestamp"],
+                        tstamp_to_str(js_entry["timestamp"]),
                         js_entry["data"],
                         js_entry["data"]]
-    
-if __name__ == "__main__":  
-    app.run(debug = True)
+
+# if __name__ == "__main__":
+#     app.run(debug = True)
+
+
+def date_parity(date):
+    # takes a float, returns True for an "odd" day (odd # of days since epoch), otherwise False
+    date = int(date + 18000)
+    days = int(date/86400)
+    return days%2 == 1
