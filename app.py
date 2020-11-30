@@ -116,8 +116,8 @@ def js_extract(js_entry):
                         js_entry["data"],
                         js_entry["data"]]
 
-# if __name__ == "__main__":
-#     app.run(debug = True)
+if __name__ == "__main__":
+    app.run(debug = True)
 
 
 def date_parity(date):
