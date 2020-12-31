@@ -4,7 +4,7 @@
         <link rel="stylesheet" href="/static/style.css">
         <table class="styled-table" border="1" cellpadding="2" cellspacing="2" style="border-collapse:collapse;">
             {% for i, j, k, l in data %}
-                {% if ((i - 21600)|int / 86400)|int %2 ==1 %}
+                {% if ((i - 21600)|int / 86400)|int %2 == 0 %}
                     <tr style="background-color:#ffdd80">
                 {% else %}
                    <tr>
