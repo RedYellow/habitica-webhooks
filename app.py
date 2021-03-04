@@ -17,13 +17,18 @@ from sqlalchemy.dialects.postgresql import JSON
 from threading import Thread
 # import psycopg2
 
+
 import json
 
 app = Flask(__name__)
+db = SQLAlchemy(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True # for prettyprinting in /getall
-db = SQLAlchemy(app)
+from .plotlydash.dashboard import init_dashboard
+app = init_dashboard(app, db)
+
+from .models import Record
 
 try:
     str_tz = os.environ["TZ"] #TODO: make this into an app.config['str_tz'] = ...
@@ -32,23 +37,23 @@ except:
 
 TZ = pytz.timezone(str_tz)
 
-class Record(db.Model):
-    __tablename__ = 'record'
-    data = db.Column(name = "data", type_ = JSON)
-    timestamp = db.Column(name = "timestamp", type_ = sa.Float(), primary_key = True, unique = True)
+# class Record(db.Model):
+#     __tablename__ = 'record'
+#     data = db.Column(name = "data", type_ = JSON)
+#     timestamp = db.Column(name = "timestamp", type_ = sa.Float(), primary_key = True, unique = True)
 
-    def __init__(self, data):
-        self.data = json.loads(data) if isinstance(data, str) else data
-        self.timestamp = datetime.now().timestamp()
+#     def __init__(self, data):
+#         self.data = json.loads(data) if isinstance(data, str) else data
+#         self.timestamp = datetime.now().timestamp()
 
-    def __repr__(self):
-        return str(self.timestamp)
+#     def __repr__(self):
+#         return str(self.timestamp)
 
-    def serialize(self):
-        return {"data": json.dumps(self.data), "timestamp": self.timestamp}
+#     def serialize(self):
+#         return {"data": json.dumps(self.data), "timestamp": self.timestamp}
 
-    def serialize_json(self):
-        return {"data": self.data, "timestamp": self.timestamp}
+#     def serialize_json(self):
+#         return {"data": self.data, "timestamp": self.timestamp}
 
 db.create_all()
 db.session.commit()
@@ -61,6 +66,70 @@ def home():
     data = [js_extract(entry) for entry in js ]
 
     return render_template("home.html", data=data)
+
+# def create_dataframe(db):
+#     records=Record.query.all()
+#     js = [e.serialize_json() for e in records]
+#     df = pd.DataFrame([js_extract(entry) for entry in js ])
+#     return df
+
+# def init_dashboard(server):
+#     """Create a Plotly Dash dashboard."""
+#     dash_app = dash.Dash(
+#         server=server,
+#         routes_pathname_prefix="/dashapp/",
+#         external_stylesheets=[
+#             "/static/dist/css/styles.css",
+#             "https://fonts.googleapis.com/css?family=Lato",
+#         ],
+#     )
+
+#     # Load DataFrame
+#     df = create_dataframe(server.db)
+
+#     # Custom HTML layout
+#     dash_app.index_string = html_layout
+
+#     # Create Layout
+#     dash_app.layout = html.Div(
+#         children=[
+#             dcc.Graph(
+#                 id="histogram-graph",
+#                 figure={
+#                     "data": [
+#                         {
+#                             "x": df["complaint_type"],
+#                             "text": df["complaint_type"],
+#                             "customdata": df["key"],
+#                             "name": "311 Calls by region.",
+#                             "type": "histogram",
+#                         }
+#                     ],
+#                     "layout": {
+#                         "title": "NYC 311 Calls category.",
+#                         "height": 500,
+#                         "padding": 150,
+#                     },
+#                 },
+#             ),
+#             create_data_table(df),
+#         ],
+#         id="dash-container",
+#     )
+#     return dash_app.server
+
+# def create_data_table(df):
+#     """Create Dash datatable from Pandas DataFrame."""
+#     table = dash_table.DataTable(
+#         id="database-table",
+#         columns=[{"name": i, "id": i} for i in df.columns],
+#         data=df.to_dict("records"),
+#         sort_action="native",
+#         sort_mode="native",
+#         page_size=300,
+#     )
+#     return table
+
 
 def add_data(data):
     db.session.add(data)
