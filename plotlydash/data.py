@@ -12,6 +12,7 @@ import pandas as pd
 from sqlalchemy.dialects.postgresql import JSON
 import sqlalchemy as sa
 import pytz
+import os
 # from .app import db
 from ..models import Record
 
