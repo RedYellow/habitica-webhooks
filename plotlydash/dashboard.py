@@ -4,8 +4,6 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_table
-import numpy as np
-import pandas as pd
 
 from .data import create_dataframe
 from .layout import html_layout
@@ -39,12 +37,12 @@ def init_dashboard(server, db):
                             "x": df["date"],
                             "text": df["timestamp"],
                             "customdata": df["data"],
-                            "name": "311 Calls by region.",
+                            "name": "Pomodoro Tracker.",
                             "type": "histogram",
                         }
                     ],
                     "layout": {
-                        "title": "NYC 311 Calls category.",
+                        "title": "Pomodoro Tracker.",
                         "height": 500,
                         "padding": 150,
                     },

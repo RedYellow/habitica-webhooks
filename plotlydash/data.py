@@ -7,13 +7,9 @@ Created on Wed Mar  3 15:12:21 2021
 """
 
 """Prepare data for Plotly Dash."""
-# import numpy as np
 import pandas as pd
-# from sqlalchemy.dialects.postgresql import JSON
-# import sqlalchemy as sa
 import pytz
 import os
-# from .app import db
 from ..models import Record
 
 from datetime import datetime
@@ -59,7 +55,6 @@ def js_extract(js_entry):
                         tstamp_to_day_str(js_entry["timestamp"]),
                         js_entry["data"],
                         js_entry["data"]]
-
 
 def create_dataframe(db):
     records=Record.query.all()
