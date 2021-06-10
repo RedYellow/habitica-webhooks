@@ -36,7 +36,7 @@ def init_dashboard(server, db):
                 figure={
                     "data": [
                         {
-                            "x": df["timestamp"],
+                            "x": df["date"],
                             "text": df["timestamp"],
                             "customdata": df["data"],
                             "name": "311 Calls by region.",

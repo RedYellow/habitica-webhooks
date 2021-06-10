@@ -10,15 +10,15 @@ from datetime import datetime
 import os
 import pytz
 
-import sqlalchemy as sa
+# import sqlalchemy as sa
 from flask import Flask, request, Response, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.dialects.postgresql import JSON
+# from sqlalchemy.dialects.postgresql import JSON
 from threading import Thread
 # import psycopg2
 
 
-import json
+# import json
 
 app = Flask(__name__)
 db = SQLAlchemy(app)
@@ -61,7 +61,7 @@ db.init_app(app)
 
 @app.route("/")
 def home():
-    records=Record.query.all()
+    records=Record.query.order_by(Record.timestamp.desc()).all()
     js = [e.serialize_json() for e in records]
     data = [js_extract(entry) for entry in js ]
 

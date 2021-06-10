@@ -10,6 +10,8 @@ from .app import db
 
 from sqlalchemy.dialects.postgresql import JSON
 import sqlalchemy as sa
+import json
+import datetime
 
 class Record(db.Model):
     __tablename__ = 'record'
