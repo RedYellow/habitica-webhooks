@@ -5,9 +5,9 @@
         <table class="styled-table" border="1" cellpadding="2" cellspacing="2" style="border-collapse:collapse;">
             {% for i, j, k, l in data %}
                 {% if ((i - 21600)|int / 86400)|int %2 == 0 %}
-                    <tr style="background-color:#ffdd80">
+                    <tr class="evenday">
                 {% else %}
-                   <tr>
+                   <tr class="oddday">
                 {% endif %}
                     <td> <b> {{ i }} </b></td>
                     <td> {{ j }} </td>

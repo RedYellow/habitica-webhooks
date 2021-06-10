@@ -22,7 +22,7 @@ def init_dashboard(server, db):
 
     # Load DataFrame
     df = create_dataframe(db)
-    print(df.columns)
+    # print("COLS", df.columns)
     # Custom HTML layout
     dash_app.index_string = html_layout
 
