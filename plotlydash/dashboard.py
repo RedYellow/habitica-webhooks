@@ -37,28 +37,48 @@ def init_dashboard(server, db):
                             "x": df["date"],
                             "text": df["timestamp"],
                             "customdata": df["data"],
-                            "name": "Pomodoro Tracker.",
+                            "name": "Pomodoros by Day",
                             "type": "histogram",
                         }
                     ],
                     "layout": {
-                        "title": "Pomodoro Tracker.",
+                        "title": "Pomodoros by Day",
                         "height": 500,
                         "padding": 150,
                     },
                 },
             ),
-            create_data_table(df),
+            create_data_table(df, "database-table"),
+            dcc.Graph(
+                id="time-histogram-graph",
+                figure={
+                    "data": [
+                        {
+                            "x": df["time"],
+                            "text": df["timestamp"],
+                            "customdata": df["data"],
+                            "name": "Pomodoros by Minute.",
+                            "type": "histogram",
+                        }
+                    ],
+                    "layout": {
+                        "title": "Pomodoros by Minute",
+                        "height": 500,
+                        "padding": 150,
+                    },
+                },
+            ),
+            create_data_table(df, "time-database-table"),
         ],
         id="dash-container",
     )
     return dash_app.server
 
 
-def create_data_table(df):
+def create_data_table(df, id_):
     """Create Dash datatable from Pandas DataFrame."""
     table = dash_table.DataTable(
-        id="database-table",
+        id=id_,
         columns=[{"name": i, "id": i} for i in df.columns],
         data=df.to_dict("records"),
         sort_action="native",

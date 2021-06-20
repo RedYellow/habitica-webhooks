@@ -2,6 +2,14 @@
 <html>
     <body>
         <link rel="stylesheet" href="/static/style.css">
+        <a href="/downloadcsv">DOWNLOAD CSV</a>
+        <a href="/downloadjson">DOWNLOAD JSON</a>
+        <div>Upload Backup:</div>
+        <form action = "/uploader" method = "POST"
+             enctype = "multipart/form-data">
+             <input type = "file" name = "file" />
+             <input type = "submit"/>
+        </form>
         <table class="styled-table" border="1" cellpadding="2" cellspacing="2" style="border-collapse:collapse;">
             {% for i, j, k, l in data %}
                 {% if ((i - 21600)|int / 86400)|int %2 == 0 %}
