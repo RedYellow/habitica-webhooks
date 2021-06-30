@@ -22,8 +22,8 @@ app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True # for prettyprinting in /getall
 from plotlydash.dashboard import init_dashboard
 app = init_dashboard(app, db)
 
-from .models import Record
-from .utilities import load_backup, add_data
+from models import Record
+from utilities import load_backup, add_data
 
 try:
     str_tz = os.environ["TZ"] #TODO: make this into an app.config['str_tz'] = ...
