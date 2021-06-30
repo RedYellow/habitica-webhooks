@@ -36,7 +36,7 @@ To download the json data, you can run something like: `curl https://{YOUR-APP-U
 
 # Testing
 
-You might want to test the app before you run it in Heroku, which you can do in the way of a regular Flask app. However, you will need to install Postgres and create a local database in order to do so.
+You might want to test the app before you run it in Heroku, which you can do in the way of a regular Flask app. However, you will need to install Postgres and create a local database in order to do so. Be sure to call it "habitica_db", or change the URL in the .flaskenv file.
 
 You can run a command like this to send webhook triggers to your local app: 
 
