@@ -12,7 +12,6 @@ import pytz
 
 from flask import Flask, request, Response, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
-# from werkzeug.utils import secure_filename
 from threading import Thread
 
 app = Flask(__name__)
@@ -109,12 +108,8 @@ def upload_file():
 @app.route('/uploader', methods = ['GET', 'POST'])
 def uploader():
     if request.method == 'POST':
-        # TODO: make sure the file is not null
         f = request.files['file']
-        Record.query.delete()
-        load_backup(f)
-        # f.save(secure_filename(f.filename))
-        return 'file uploaded successfully'
+        return load_backup(f)
     else:
         "there was an error"
 
