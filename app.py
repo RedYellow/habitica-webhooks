@@ -6,6 +6,7 @@ Created on Thu Oct 22 17:52:45 2020
 @author: Nic
 """
 
+from __future__ import absolute_import
 from datetime import datetime
 import os
 import pytz
