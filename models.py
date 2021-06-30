@@ -6,7 +6,7 @@ Created on Wed Mar  3 19:19:34 2021
 @author: Nic
 """
 
-from .app import db
+from app import db
 
 from sqlalchemy.dialects.postgresql import JSON
 import sqlalchemy as sa
