@@ -7,8 +7,8 @@ Created on Sat Jun 12 15:46:03 2021
 """
 
 # import pandas as pd
-from .app import db
-from .models import Record
+from app import db
+from models import Record
 import json
 from werkzeug.utils import secure_filename
 
