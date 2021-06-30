@@ -19,7 +19,7 @@ db = SQLAlchemy(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True # for prettyprinting in /getall
-from .plotlydash.dashboard import init_dashboard
+from plotlydash.dashboard import init_dashboard
 app = init_dashboard(app, db)
 
 from .models import Record
