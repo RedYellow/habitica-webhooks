@@ -13,3 +13,4 @@ dash==1.19.0
 dash_core_components==1.15.0
 dash_html_components==1.1.2
 dash_table==4.11.2
+pandas=1.16.0
