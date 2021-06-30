@@ -10,7 +10,7 @@ Created on Wed Mar  3 15:12:21 2021
 import pandas as pd
 import pytz
 import os
-from ..models import Record
+from models import Record
 
 from datetime import datetime
 
